@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import AdminPanel from "./AdminPanel";
 
 const trainingAreas = [
   {
@@ -32,8 +33,7 @@ const plans = [
     number: "01",
     name: "Open Gym",
     description: "Your time. Your training. Your space.",
-    monthly: 89,
-    yearly: 76,
+    monthly: 1200,
     features: [
       "Unlimited gym floor access",
       "Premium training equipment",
@@ -44,8 +44,7 @@ const plans = [
     number: "02",
     name: "All Access",
     description: "Everything you need to keep moving forward.",
-    monthly: 139,
-    yearly: 118,
+    monthly: 2000,
     features: [
       "Everything in Open Gym",
       "Unlimited coached group sessions",
@@ -88,11 +87,11 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return <span className="section-label">{children}</span>;
 }
 
-export default function App() {
+function PublicWebsite() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTraining, setActiveTraining] = useState(0);
-  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
+  const [billing, setBilling] = useState<"monthly" | "three-month" | "six-month" | "yearly">("monthly");
   const [modalOpen, setModalOpen] = useState(false);
   const [interest, setInterest] = useState("Not sure yet");
   const [draftReady, setDraftReady] = useState(false);
@@ -212,6 +211,7 @@ export default function App() {
             <a href="#training">Training</a>
             <a href="#space">The space</a>
             <a href="#membership">Membership</a>
+            <a href="#contact">Contact</a>
           </nav>
 
           <button className="header-cta" type="button" onClick={() => openInquiry()}>
@@ -236,6 +236,7 @@ export default function App() {
           <a href="#training" onClick={() => setMenuOpen(false)}>Training</a>
           <a href="#space" onClick={() => setMenuOpen(false)}>The space</a>
           <a href="#membership" onClick={() => setMenuOpen(false)}>Membership</a>
+          <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           <button type="button" onClick={() => openInquiry()}>Book a tour <ArrowIcon diagonal /></button>
         </nav>
       </header>
@@ -373,19 +374,41 @@ export default function App() {
                     Monthly
                   </button>
                   <button
+                    className={billing === "three-month" ? "is-active" : ""}
+                    type="button"
+                    aria-pressed={billing === "three-month"}
+                    onClick={() => setBilling("three-month")}
+                  >
+                    3 months <span>Save 10%</span>
+                  </button>
+                  <button
+                    className={billing === "six-month" ? "is-active" : ""}
+                    type="button"
+                    aria-pressed={billing === "six-month"}
+                    onClick={() => setBilling("six-month")}
+                  >
+                    6 months <span>Save 15%</span>
+                  </button>
+                  <button
                     className={billing === "yearly" ? "is-active" : ""}
                     type="button"
                     aria-pressed={billing === "yearly"}
                     onClick={() => setBilling("yearly")}
                   >
-                    Yearly <span>Save 15%</span>
+                    12 months <span>Save 20%</span>
                   </button>
                 </div>
               </div>
             </div>
 
             <div className="plan-list">
-              {plans.map((plan) => (
+              {plans.map((plan) => {
+                const termMonths = billing === "three-month" ? 3 : billing === "six-month" ? 6 : billing === "yearly" ? 12 : 1;
+                const discountRate = termMonths === 3 ? 0.1 : termMonths === 6 ? 0.15 : termMonths === 12 ? 0.2 : 0;
+                const billedAmount = Math.round(plan.monthly * termMonths * (1 - discountRate));
+                const displayRate = Math.round(billedAmount / termMonths);
+                const billingLabel = termMonths === 1 ? "Billed monthly" : `৳${billedAmount.toLocaleString("en-BD")} billed ${termMonths === 12 ? "annually" : `every ${termMonths} months`} · Save ${discountRate * 100}%`;
+                return (
                 <div className="plan-row" key={plan.name}>
                   <div className="plan-title-group">
                     <span className="plan-number">{plan.number} / MEMBERSHIP</span>
@@ -395,17 +418,19 @@ export default function App() {
                   <ul className="plan-features">
                     {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
                   </ul>
-                  <div className="plan-price" aria-label={`${billing === "monthly" ? plan.monthly : plan.yearly} dollars per month, billed ${billing === "monthly" ? "monthly" : "annually"}`}>
-                    <span className="price-currency">$</span>{billing === "monthly" ? plan.monthly : plan.yearly}<span className="price-period">/mo</span>
-                    <small>Billed {billing === "monthly" ? "monthly" : "annually"}</small>
+                  <div className="plan-price" aria-label={`${displayRate.toLocaleString("en-BD")} Bangladeshi taka per month equivalent. ${billingLabel}`}>
+                    <span className="price-currency">৳</span>{displayRate.toLocaleString("en-BD")}<span className="price-period">/mo</span>
+                    <small>{billingLabel}</small>
                   </div>
                   <button className="plan-select" type="button" onClick={() => openInquiry(plan.name)} aria-label={`Enquire about ${plan.name}`}>
                     <ArrowIcon diagonal size={24} />
                   </button>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
+            <p className="membership-trainer-note">Personal training can be added to any membership for an extra fee. Ask us about trainer availability and rates.</p>
             <p className="membership-help">
               Not sure where to start? <button type="button" onClick={() => openInquiry()}>Let's find your fit <ArrowIcon diagonal size={15} /></button>
             </p>
@@ -440,12 +465,16 @@ export default function App() {
               <a href="#training">Training</a>
               <a href="#space">The space</a>
               <a href="#membership">Membership</a>
+              <a href="#contact">Contact</a>
             </nav>
-            <div className="footer-contact">
-              <span>Say hello</span>
-              <a href="mailto:hello@fitnesscare.com">hello@fitnesscare.com</a>
+            <section className="footer-contact" id="contact" aria-label="Contact Fitness Care">
+              <span>Contact</span>
+              <a href="mailto:hello@fitnesscare.com">customer.care@fitnesscare.com</a>
+              <a href="tel:+8801317338008">+8801317338008</a>
+              <span>Location</span>
+              <address>Nirala Mor, Khulna, Bangladesh</address>
               <button type="button" onClick={() => openInquiry()}>Book a tour <ArrowIcon diagonal size={16} /></button>
-            </div>
+            </section>
           </div>
           <div className="footer-bottom">
             <span>&copy; {new Date().getFullYear()} Fitness Care. All rights reserved.</span>
@@ -516,4 +545,9 @@ export default function App() {
       )}
     </>
   );
+}
+
+export default function App() {
+  const route = window.location.pathname.replace(/\/+$/, "") || "/";
+  return route === "/admin" || route.startsWith("/admin/") ? <AdminPanel /> : <PublicWebsite />;
 }
