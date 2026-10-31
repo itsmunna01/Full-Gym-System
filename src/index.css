@@ -110,10 +110,10 @@ img { display: block; max-width: 100%; }
 .membership-heading h2 { margin-top: 35px; font-size: clamp(78px, 8vw, 132px); line-height: .84; }
 .membership-aside { max-width: 340px; padding-bottom: 7px; }
 .membership-aside > p { margin: 0 0 29px; color: #b1b9ad; font-size: 16px; line-height: 1.7; }
-.billing-switch { display: inline-flex; align-items: center; gap: 23px; border-bottom: 1px solid #5a6257; }
-.billing-switch button { min-height: 37px; padding: 0 0 10px; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: transparent; color: #aab1a7; font-size: 12px; font-weight: 700; letter-spacing: .04em; white-space: nowrap; }
-.billing-switch button.is-active { color: #f6f6ec; border-bottom-color: var(--acid); }
-.billing-switch button span { margin-left: 5px; color: var(--acid); font-size: 10px; text-transform: uppercase; }
+.billing-switch { width: min(100%, 330px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.billing-switch button { min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 0 7px; border: 1px solid #5a6257; border-radius: 2px; background: transparent; color: #aab1a7; font-size: 10px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+.billing-switch button.is-active { border-color: var(--acid); background: rgba(215, 237, 84, .08); color: #f6f6ec; }
+.billing-switch button span { margin: 0; color: var(--acid); font-size: 8px; text-transform: uppercase; }
 .plan-row { display: grid; grid-template-columns: minmax(270px, 1.25fr) minmax(230px, 1fr) minmax(155px, .55fr) 58px; align-items: center; gap: 34px; padding: 38px 0 42px; border-top: 1px solid #4d554b; transition: padding-left .25s ease, background .25s ease; }
 .plan-row:last-child { border-bottom: 1px solid #4d554b; }
 .plan-row:hover { padding-left: 12px; background: rgba(255, 255, 255, .018); }
@@ -127,6 +127,7 @@ img { display: block; max-width: 100%; }
 .plan-price small { display: block; margin: 8px 0 0 3px; color: #9da79b; font-family: "DM Sans", sans-serif; font-size: 11px; font-weight: 400; letter-spacing: .01em; }
 .plan-select { width: 56px; height: 56px; display: grid; place-items: center; border: 1px solid #747e70; border-radius: 50%; background: transparent; color: var(--acid); transition: background .25s ease, color .25s ease, border-color .25s ease; }
 .plan-select:hover { background: var(--acid); border-color: var(--acid); color: var(--ink); }
+.membership-trainer-note { margin: 27px 0 -13px; color: #aab3a6; font-size: 12px; line-height: 1.6; }
 .membership-help { display: flex; align-items: center; gap: 7px; margin: 29px 0 0; color: #aab3a6; font-size: 13px; }
 .membership-help button { display: inline-flex; align-items: center; gap: 5px; padding: 0; border: 0; background: transparent; color: var(--acid); font-size: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 
@@ -148,6 +149,7 @@ img { display: block; max-width: 100%; }
 .footer-links > span, .footer-contact > span { margin-bottom: 11px; color: #9fa99c; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 .footer-links a, .footer-contact a { transition: color .2s ease; }
 .footer-links a:hover, .footer-contact a:hover { color: var(--acid); }
+.footer-contact address { font-style: normal; line-height: 1.5; }
 .footer-contact button { display: inline-flex; align-items: center; gap: 10px; padding: 0 0 5px; margin-top: 10px; border: 0; border-bottom: 1px solid #a7afa4; background: transparent; color: #f4f4ec; font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .footer-contact button:hover { color: var(--acid); border-color: var(--acid); }
 .footer-bottom { display: flex; justify-content: space-between; gap: 20px; padding-top: 25px; border-top: 1px solid #363e35; color: #8d978a; font-size: 11px; }
