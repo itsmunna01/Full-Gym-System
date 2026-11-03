@@ -72,7 +72,7 @@ img { display: block; max-width: 100%; }
 .intro-layout { display: grid; grid-template-columns: minmax(190px, 24%) minmax(0, 1fr); column-gap: 38px; }
 .intro-layout > .section-label { align-self: start; margin-top: 13px; }
 .intro-layout > .section-label::before, .space-content .section-label::before { background: #69782a; }
-.intro-main h2, .training-heading h2, .space-content h2, .membership-heading h2, .closing-content h2, .modal-panel h2 { margin: 0; font-family: var(--display); font-weight: 700; letter-spacing: -.025em; text-transform: uppercase; }
+.intro-main h2, .training-heading h2, .space-content h2, .membership-heading h2, .personal-training-copy h2, .closing-content h2, .modal-panel h2 { margin: 0; font-family: var(--display); font-weight: 700; letter-spacing: -.025em; text-transform: uppercase; }
 .intro-main h2 { font-size: clamp(76px, 8.6vw, 145px); line-height: .86; }
 .intro-copy { max-width: 420px; margin: 52px 0 0 auto; }
 .intro-copy p { margin: 0 0 27px; color: #424940; font-size: 17px; line-height: 1.75; }
@@ -104,6 +104,22 @@ img { display: block; max-width: 100%; }
 .space-content { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 85px clamp(45px, 7.2vw, 135px); }
 .space-content h2 { margin-top: 44px; font-size: clamp(70px, 6.7vw, 111px); line-height: .84; }
 .space-content p { max-width: 390px; margin: 30px 0 30px; color: #4a5148; font-size: 17px; line-height: 1.75; }
+
+.personal-training-section { min-height: 670px; display: grid; grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); background: #e7e8df; color: var(--ink); }
+.personal-training-photo { position: relative; min-height: 670px; overflow: hidden; background: #242923; }
+.personal-training-photo img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; object-position: center 45%; transition: transform .7s ease; }
+.personal-training-section:hover .personal-training-photo img { transform: scale(1.025); }
+.personal-training-photo-tag { position: absolute; left: clamp(22px, 4vw, 55px); bottom: 29px; padding: 10px 13px; background: var(--acid); color: var(--ink); font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.personal-training-copy { align-self: center; padding: clamp(58px, 8vw, 120px) clamp(35px, 7.5vw, 112px); }
+.personal-training-copy .section-label::before { background: #69782a; }
+.personal-training-copy h2 { margin-top: 34px; font-size: clamp(66px, 7vw, 108px); line-height: .84; }
+.personal-training-copy > p { max-width: 490px; margin: 25px 0 25px; color: #4a5348; font-size: 15px; line-height: 1.75; }
+.personal-training-benefits { display: flex; flex-direction: column; gap: 12px; padding: 0; margin: 0 0 31px; list-style: none; color: #283126; font-size: 12px; font-weight: 600; }
+.personal-training-benefits li { display: flex; align-items: center; gap: 12px; }
+.personal-training-benefits li span { color: #73852f; font-size: 9px; font-weight: 700; letter-spacing: .1em; }
+.personal-training-action { display: flex; align-items: center; flex-wrap: wrap; gap: 15px 20px; }
+.personal-training-action .button-primary { min-height: 52px; gap: 20px; padding-inline: 17px; font-size: 10px; }
+.personal-training-action > span { max-width: 185px; color: #6b7468; font-size: 10px; line-height: 1.5; }
 
 .membership-section { padding: clamp(105px, 9.5vw, 155px) 0 clamp(110px, 9vw, 150px); background: #1b201a; }
 .membership-heading { display: flex; justify-content: space-between; align-items: end; gap: 55px; margin-bottom: 72px; }
@@ -216,6 +232,10 @@ img { display: block; max-width: 100%; }
   .space-section { grid-template-columns: 50% 50%; min-height: 590px; }
   .space-media { min-height: 590px; }
   .space-content { padding: 65px 35px; }
+  .personal-training-section { min-height: 590px; grid-template-columns: 45% 55%; }
+  .personal-training-photo { min-height: 590px; }
+  .personal-training-copy { padding: 55px 35px; }
+  .personal-training-copy h2 { font-size: clamp(61px, 7.7vw, 86px); }
   .space-content h2 { font-size: clamp(65px, 8vw, 87px); }
   .membership-heading h2 { font-size: clamp(76px, 10vw, 115px); }
   .membership-aside { max-width: 285px; }
@@ -261,6 +281,11 @@ img { display: block; max-width: 100%; }
   .space-section { grid-template-columns: 1fr; }
   .space-media { height: 430px; min-height: 0; }
   .space-content { padding: 94px var(--gutter) 101px; }
+  .personal-training-section { grid-template-columns: 1fr; }
+  .personal-training-photo { height: 430px; min-height: 0; }
+  .personal-training-copy { padding: 82px var(--gutter) 88px; }
+  .personal-training-copy h2 { font-size: clamp(70px, 13vw, 100px); }
+  .personal-training-action > span { max-width: 230px; }
   .space-content h2 { margin-top: 33px; font-size: clamp(74px, 13.8vw, 110px); }
   .space-content p { margin-top: 26px; }
   .membership-section { padding: 103px 0 109px; }
@@ -299,6 +324,9 @@ img { display: block; max-width: 100%; }
   .training-name { font-size: clamp(45px, 10vw, 59px); }
   .training-visual { height: 430px; }
   .space-media { height: 345px; }
+  .personal-training-photo { height: 345px; }
+  .personal-training-copy h2 { font-size: clamp(63px, 14vw, 80px); }
+  .personal-training-action .button-primary { gap: 13px; padding-inline: 13px; font-size: 9px; }
   .space-content h2 { font-size: clamp(69px, 15vw, 90px); }
   .membership-heading h2 { font-size: clamp(66px, 14vw, 85px); }
   .plan-title-group h3 { font-size: 47px; }

@@ -199,6 +199,8 @@ export default function AdminPanel() {
   const [trainers, setTrainers] = useState<Trainer[]>(readTrainers);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All members");
+  const [planFilter, setPlanFilter] = useState("All plans");
+  const [activeNav, setActiveNav] = useState("overview");
   const [editing, setEditing] = useState<Member | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [editingTrainer, setEditingTrainer] = useState<Trainer | null>(null);
@@ -212,12 +214,23 @@ export default function AdminPanel() {
     localStorage.setItem(TRAINERS_STORAGE_KEY, JSON.stringify(trainers));
   }, [trainers]);
 
+  useEffect(() => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>("#overview, #members, #trainers"));
+    const observer = new IntersectionObserver((entries) => {
+      const current = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (current) setActiveNav(current.target.id);
+    }, { rootMargin: "-18% 0px -68% 0px", threshold: [0, 0.2, 0.5] });
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   const filteredMembers = useMemo(() => members.filter((member) => {
     const search = query.trim().toLowerCase();
     const matchesQuery = !search || [member.name, member.email, member.phone, member.id, member.membership].some((value) => value.toLowerCase().includes(search));
     const matchesStatus = statusFilter === "All members" || member.status === statusFilter;
-    return matchesQuery && matchesStatus;
-  }), [members, query, statusFilter]);
+    const matchesPlan = planFilter === "All plans" || member.membership === planFilter;
+    return matchesQuery && matchesStatus && matchesPlan;
+  }), [members, query, statusFilter, planFilter]);
 
   const activeCount = members.filter((member) => member.status === "Active").length;
   const monthlyRevenue = members.reduce((total, member) => {
@@ -288,16 +301,16 @@ export default function AdminPanel() {
       <aside className="admin-sidebar">
         <a className="admin-brand" href="/" aria-label="Fitness Care website"><span className="admin-brand-mark">F<span>.</span></span><span>FITNESS<br />CARE</span></a>
         <div className="admin-sidebar-caption">WORKSPACE</div>
-        <a className="admin-nav-link" href="#overview"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Overview</a>
-        <a className="admin-nav-link is-active" href="#members"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20c.4-3.5 2.5-5.4 6.2-5.4s5.8 1.9 6.2 5.4M16 5.1a3.5 3.5 0 0 1 0 6.8m1.2 3c2.3.7 3.6 2.4 4 5.1"/></svg>Members<span className="admin-nav-count">{members.length}</span></a>
-        <a className="admin-nav-link" href="#trainers"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M4.5 20c.5-4.1 3-6.2 7.5-6.2s7 2.1 7.5 6.2M18.5 4.5l2 2m-2 2 2-2"/></svg>Trainers<span className="admin-nav-count">{trainers.length}</span></a>
+        <a className={`admin-nav-link${activeNav === "overview" ? " is-active" : ""}`} href="#overview" onClick={() => setActiveNav("overview")} aria-current={activeNav === "overview" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Overview</a>
+        <a className={`admin-nav-link${activeNav === "members" ? " is-active" : ""}`} href="#members" onClick={() => setActiveNav("members")} aria-current={activeNav === "members" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.8 20c.4-3.5 2.5-5.4 6.2-5.4s5.8 1.9 6.2 5.4M16 5.1a3.5 3.5 0 0 1 0 6.8m1.2 3c2.3.7 3.6 2.4 4 5.1"/></svg>Members<span className="admin-nav-count">{members.length}</span></a>
+        <a className={`admin-nav-link${activeNav === "trainers" ? " is-active" : ""}`} href="#trainers" onClick={() => setActiveNav("trainers")} aria-current={activeNav === "trainers" ? "page" : undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M4.5 20c.5-4.1 3-6.2 7.5-6.2s7 2.1 7.5 6.2M18.5 4.5l2 2m-2 2 2-2"/></svg>Trainers<span className="admin-nav-count">{trainers.length}</span></a>
         <div className="admin-sidebar-bottom"><div className="admin-avatar">FC</div><div><strong>Gym admin</strong><span>Admin workspace</span></div><a href="/" aria-label="Return to website">↗</a></div>
       </aside>
 
-      <main className="admin-main" id="overview">
+      <main className="admin-main">
         <header className="admin-topbar"><div><span className="admin-topbar-kicker">FITNESS CARE / MANAGEMENT</span><a className="admin-view-site" href="/">View website <span>↗</span></a></div><div className="admin-topbar-right"><span className="admin-live-dot" /> Admin session <div className="admin-top-avatar">FC</div><button className="admin-logout" type="button" onClick={logout}>Log out</button></div></header>
         <div className="admin-content">
-          <div className="admin-page-heading"><div><div className="admin-eyebrow">{todayLabel}</div><h1>Members<span>.</span></h1><p>Manage your gym community and keep member records current.</p></div><button className="admin-button admin-button-primary" type="button" onClick={() => { setEditing(null); setFormOpen(true); }}><span className="admin-plus">+</span> Add member</button></div>
+          <div className="admin-page-heading" id="overview"><div><div className="admin-eyebrow">{todayLabel}</div><h1>Welcome back<span>.</span></h1><p>Here’s your gym at a glance. Manage members, subscriptions, and your coaching team.</p></div><button className="admin-button admin-button-primary" type="button" onClick={() => { setEditing(null); setFormOpen(true); }}><span className="admin-plus">+</span> Add member</button></div>
 
           <section className="admin-stats" aria-label="Membership summary">
             <article className="admin-stat-card"><div className="admin-stat-top"><span>Total members</span><span className="admin-stat-icon">↗</span></div><strong>{members.length.toString().padStart(2, "0")}</strong><small>Member records in this workspace</small></article>
@@ -308,10 +321,16 @@ export default function AdminPanel() {
 
           <section className="admin-members-panel" id="members">
             <div className="admin-members-heading"><div><span className="admin-eyebrow">YOUR COMMUNITY</span><h2>All members <span>{members.length}</span></h2></div><button className="admin-export-button" type="button" onClick={exportCsv}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v4h16v-4"/></svg>Export CSV</button></div>
-            <div className="admin-table-controls"><label className="admin-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, email, phone..." aria-label="Search members" /></label><label className="admin-filter-label"><span>Status</span><select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}><option>All members</option><option>Active</option><option>Paused</option></select></label></div>
+            <div className="admin-table-controls">
+              <label className="admin-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, email, or phone" aria-label="Search members" />{query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search">×</button>}</label>
+              <label className="admin-filter-label"><span>Status</span><select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}><option>All members</option><option>Active</option><option>Paused</option></select></label>
+              <label className="admin-filter-label"><span>Plan</span><select value={planFilter} onChange={(event) => setPlanFilter(event.target.value)}><option>All plans</option><option>Open Gym</option><option>All Access</option></select></label>
+              {(query || statusFilter !== "All members" || planFilter !== "All plans") && <button className="admin-clear-filters" type="button" onClick={() => { setQuery(""); setStatusFilter("All members"); setPlanFilter("All plans"); }}>Clear filters</button>}
+              <span className="admin-results-count">{filteredMembers.length} result{filteredMembers.length === 1 ? "" : "s"}</span>
+            </div>
             <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Member</th><th>Phone</th><th>Membership</th><th>Term</th><th>Trainer add-on</th><th>Status</th><th>Joined</th><th><span className="admin-sr-only">Actions</span></th></tr></thead><tbody>
               {filteredMembers.map((member, index) => <tr key={member.id}><td><div className="admin-member-cell"><span className={`admin-member-avatar avatar-${index % 5}`}>{member.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase()}</span><span><strong>{member.name}</strong><small>{member.email}</small></span></div></td><td className="admin-phone-cell">{member.phone}</td><td><span className="admin-plan-pill">{member.membership}</span></td><td>{member.termMonths || 1} mo</td><td className="admin-trainer-cell">{member.trainerId ? <>{trainers.find((trainer) => trainer.id === member.trainerId)?.name || "Trainer"}<small>+{formatMoney(member.trainerFee || 0)}/mo</small></> : "—"}</td><td><span className={`admin-status-pill ${member.status === "Active" ? "status-active" : "status-paused"}`}><i />{member.status}</span></td><td className="admin-date-cell">{formatDate(member.joined)}</td><td><div className="admin-row-actions"><button type="button" onClick={() => { setEditing(member); setFormOpen(true); }} aria-label={`Edit ${member.name}`}>Edit</button><button type="button" className="admin-delete-action" onClick={() => deleteMember(member)} aria-label={`Delete ${member.name}`}>Delete</button></div></td></tr>)}
-              {!filteredMembers.length && <tr><td className="admin-empty" colSpan={8}><span>Nothing found</span><small>Try another search or change the status filter.</small></td></tr>}
+              {!filteredMembers.length && <tr><td className="admin-empty" colSpan={8}><span>{members.length ? "No members match these filters" : "Your member list is ready to grow"}</span><small>{members.length ? "Try a different search or clear the filters." : "Add your first member to get your gym community started."}</small>{members.length ? <button className="admin-empty-link" type="button" onClick={() => { setQuery(""); setStatusFilter("All members"); setPlanFilter("All plans"); }}>Clear filters</button> : <button className="admin-empty-link" type="button" onClick={() => { setEditing(null); setFormOpen(true); }}>Add your first member</button>}</td></tr>}
             </tbody></table></div>
             <div className="admin-table-footer"><span>Showing <strong>{filteredMembers.length}</strong> of <strong>{members.length}</strong> members</span></div>
           </section>

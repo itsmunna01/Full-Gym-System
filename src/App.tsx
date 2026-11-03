@@ -211,6 +211,7 @@ function PublicWebsite() {
             <a href="#training">Training</a>
             <a href="#space">The space</a>
             <a href="#membership">Membership</a>
+            <a href="#personal-training">Personal training</a>
             <a href="#contact">Contact</a>
           </nav>
 
@@ -236,6 +237,7 @@ function PublicWebsite() {
           <a href="#training" onClick={() => setMenuOpen(false)}>Training</a>
           <a href="#space" onClick={() => setMenuOpen(false)}>The space</a>
           <a href="#membership" onClick={() => setMenuOpen(false)}>Membership</a>
+          <a href="#personal-training" onClick={() => setMenuOpen(false)}>Personal training</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           <button type="button" onClick={() => openInquiry()}>Book a tour <ArrowIcon diagonal /></button>
         </nav>
@@ -437,6 +439,27 @@ function PublicWebsite() {
           </div>
         </section>
 
+        <section className="personal-training-section" id="personal-training" aria-labelledby="personal-training-title">
+          <div className="personal-training-photo">
+            <img src="/images/strength.jpg" alt="A member working through a coached strength-training session" loading="lazy" />
+            <span className="personal-training-photo-tag">ONE-TO-ONE COACHING</span>
+          </div>
+          <div className="personal-training-copy">
+            <SectionLabel>05 / Personal training</SectionLabel>
+            <h2 id="personal-training-title">A TRAINER<br />IN YOUR CORNER.</h2>
+            <p>Make every rep count with coaching shaped around your goals. Get personal guidance, thoughtful progressions, and technique feedback in a focused one-to-one session.</p>
+            <ul className="personal-training-benefits">
+              <li><span>01</span> A session tailored to your goals</li>
+              <li><span>02</span> Coaching and form feedback</li>
+              <li><span>03</span> A plan to keep progressing</li>
+            </ul>
+            <div className="personal-training-action">
+              <button className="button-primary" type="button" onClick={() => openInquiry("Personal training session")}>Enquire about a session <ArrowIcon diagonal size={17} /></button>
+              <span>Personal training is an add-on and has an extra charge. Ask us for current rates.</span>
+            </div>
+          </div>
+        </section>
+
         <section className="closing-section" aria-labelledby="closing-title">
           <div className="page-container">
             <SectionLabel>The first step is yours</SectionLabel>
@@ -465,6 +488,7 @@ function PublicWebsite() {
               <a href="#training">Training</a>
               <a href="#space">The space</a>
               <a href="#membership">Membership</a>
+              <a href="#personal-training">Personal training</a>
               <a href="#contact">Contact</a>
             </nav>
             <section className="footer-contact" id="contact" aria-label="Contact Fitness Care">
@@ -514,6 +538,7 @@ function PublicWebsite() {
                         <option>Not sure yet</option>
                         <option>Open Gym</option>
                         <option>All Access</option>
+                        <option>Personal training session</option>
                       </select>
                     </label>
                     <label>
